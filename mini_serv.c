@@ -149,6 +149,7 @@ void remove_client(int fd) {
     current = current->next;
   }
 
+  // 클라이언트를 찾지 못한 경우
   if (current == NULL)
     return;
 
@@ -158,16 +159,9 @@ void remove_client(int fd) {
   else
     clients = clients->next;
 
-  // 클라이언트의 메시지 버퍼 처리
-  if (current->buf) {
-    char *temp_buf = malloc(sizeof(char) * (strlen(current->buf) + 100));
-    if (!temp_buf)
-      fatal_error();
-    sprintf(temp_buf, "client %d: %s\n", current->id, current->buf);
-
-    free(temp_buf);
+  // 클라이언트의 메시지 버퍼 해제
+  if (current->buf)
     free(current->buf);
-  }
 
   // 클라이언트 퇴장 메시지 브로드캐스트
   char msg[100];
